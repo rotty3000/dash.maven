@@ -9,8 +9,7 @@
   <scm>
     <connection>scm:git:git://git.eclipse.org/gitroot/dash/org.eclipse.dash.maven.git</connection>
     <developerConnection>scm:git:ssh://git.eclipse.org/gitroot/dash/org.eclipse.dash.maven.git</developerConnection>
-    <url>http://git.eclipse.org/</url>
-  <scm>
+  </scm>
 
 <distributionManagement>
     <repository>
