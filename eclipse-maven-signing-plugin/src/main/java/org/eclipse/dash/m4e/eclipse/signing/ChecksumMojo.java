@@ -119,7 +119,7 @@ public class ChecksumMojo extends AbstractEclipseSigningMojo
             for (Iterator i = files.iterator(); i.hasNext();)
             {
                 String filename = (String)i.next();
-                info("fixing " + filename);
+                info("Processing: " + filename);
                 if (filename.endsWith("artifacts.jar"))
                 {
                     continue;
@@ -155,11 +155,21 @@ public class ChecksumMojo extends AbstractEclipseSigningMojo
     {
         try
         {
+            /*
+             * some people have features the same as plugins features so we need to tweak the xpath
+             */
+            boolean isPlugin = plugin.contains("/plugins/");
+            
             String pluginFile = FileUtils.basename(plugin,".jar");
 
-            String[] artifactBits = pluginFile.split("_");
+            int lastUnderscore = pluginFile.lastIndexOf('_');
+            
+            String[] artifactBits = new String[2];
 
-            getLog().info(artifactBits[0] + "/" + artifactBits[1]);
+            artifactBits[0] = pluginFile.substring(0,lastUnderscore);
+            artifactBits[1] = pluginFile.substring(lastUnderscore + 1, pluginFile.length());
+            
+            getLog().info(" Artifact: " + artifactBits[0] + " / Version: " + artifactBits[1] + " / isPlugin: " + isPlugin );
 
             File inFile = new File(plugin);
             String inFileSize = Long.toString(inFile.length());
@@ -183,24 +193,43 @@ public class ChecksumMojo extends AbstractEclipseSigningMojo
             String expr;
             XPath xpath = XPathFactory.newInstance().newXPath();
 
-            expr = "/repository/artifacts//artifact[@id='" + artifactBits[0] + "' and @version='" + artifactBits[1]
-                    + "']/properties//property[@name='artifact.size']/@value";
+            if ( isPlugin )
+            {
+                expr = "/repository/artifacts//artifact[@id='" + artifactBits[0] + "' and @version='" + artifactBits[1] + "' and @classifier='osgi.bundle']/properties//property[@name='artifact.size']/@value";
+            }
+            else
+            {
+                expr = "/repository/artifacts//artifact[@id='" + artifactBits[0] + "' and @version='" + artifactBits[1] + "' and @classifier='org.eclipse.update.feature']/properties//property[@name='artifact.size']/@value";
+            }
             Node artifactSize = (Node)xpath.evaluate(expr,document,XPathConstants.NODE);
             if (artifactSize != null)
             {
                 artifactSize.setNodeValue(inFileSize);
             }
 
-            expr = "/repository/artifacts//artifact[@id='" + artifactBits[0] + "' and @version='" + artifactBits[1]
-                    + "']/properties//property[@name='download.size']/@value";
+            if (isPlugin)
+            {
+                expr = "/repository/artifacts//artifact[@id='" + artifactBits[0] + "' and @version='" + artifactBits[1] + "' and @classifier='osgi.bundle']/properties//property[@name='download.size']/@value";
+            }
+            else
+            {
+                expr = "/repository/artifacts//artifact[@id='" + artifactBits[0] + "' and @version='" + artifactBits[1] + "' and @classifier='org.eclipse.update.feature']/properties//property[@name='download.size']/@value";   
+            }
+            
             Node downloadSize = (Node)xpath.evaluate(expr,document,XPathConstants.NODE);
             if (downloadSize != null)
             {
                 downloadSize.setNodeValue(inFileSize);
             }
 
-            expr = "/repository/artifacts//artifact[@id='" + artifactBits[0] + "' and @version='" + artifactBits[1]
-                    + "']/properties//property[@name='download.md5']/@value";
+            if ( isPlugin )
+            {
+                expr = "/repository/artifacts//artifact[@id='" + artifactBits[0] + "' and @version='" + artifactBits[1] + "' and @classifier='osgi.bundle']/properties//property[@name='download.md5']/@value";
+            }
+            else
+            {
+                expr = "/repository/artifacts//artifact[@id='" + artifactBits[0] + "' and @version='" + artifactBits[1] + "' and @classifier='org.eclipse.update.feature']/properties//property[@name='download.md5']/@value";
+            }
             Node downloadMD5 = (Node)xpath.evaluate(expr,document,XPathConstants.NODE);
             if (downloadMD5 != null)
             {
