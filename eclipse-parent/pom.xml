@@ -13,10 +13,6 @@
 	   inherit.
     </description>
 
-	<build>
-		<sourceDirectory>src</sourceDirectory>
-	</build>
-
 	<ciManagement>
 		<system>hudson</system>
 		<url>https://hudson.eclipse.org/hudson</url>
