@@ -1,0 +1,12 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0">
+  <modelVersion>4.0.0</modelVersion>
+ 
+  <groupId>org.eclipse.dash.maven</groupId>
+  <artifactId>eclipse-maven-parent</artifactId>
+  <version>1.0.2.0-SNAPSHOT</version>
+  <packaging>pom</packaging>
+  <modules>
+     <module>eclipse-parent</module>
+     <module>eclipse-maven-signing-plugin</module>
+  </modules>
+</project>
