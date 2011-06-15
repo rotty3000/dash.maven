@@ -5,7 +5,7 @@
    <artifactId>eclipse-parent</artifactId>
    <packaging>pom</packaging>
    <name>Eclipse Parent POM</name>
-   <version>1.0.0.0-SNAPSHOT</version>
+   <version>1.0.0</version>
 
    <description>
 	   This is the parent for all eclipse.org applications.  This contains
