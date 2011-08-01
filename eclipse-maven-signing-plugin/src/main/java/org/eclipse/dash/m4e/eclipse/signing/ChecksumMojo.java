@@ -38,10 +38,18 @@ import org.codehaus.plexus.util.FileUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * This plugin walks through a p2 repository and repairs the artifacts.xml.
- * 
+ * <br/>
+ * It also insert the property <code>&lt;property name='publishPackFilesAsSiblings' value='true'/&gt;</code>
+ * and the mapping rules if they were not present already:
+ * <br/>
+ * <code>&lt;rule filter='(&amp; (classifier=osgi.bundle) (format=packed))'
+ *    output='${repoUrl}/plugins/${id}_${version}.jar.pack.gz'/&gt;</code>
+ * <br/><code>&lt;rule filter='(&amp; (classifier=org.eclipse.update.feature) (format=packed))'
+ *    output='${repoUrl}/features/${id}_${version}.jar.pack.gz'/&gt;</code>
  * @goal fixCheckSums
  * @phase package
  * @description updates the md5 checksum and file size
@@ -113,6 +121,8 @@ public class ChecksumMojo extends AbstractEclipseSigningMojo
 
             FileUtils.fileDelete(unzipDir + "/artifacts.jar.pack.gz");
             FileUtils.fileDelete(unzipDir + "/content.jar.pack.gz");
+            
+            insertPropertyAndMappingRules();
 
             List files = FileUtils.getFileNames(new File(unzipDir),"**/*.jar","",true);
 
@@ -245,7 +255,7 @@ public class ChecksumMojo extends AbstractEclipseSigningMojo
                 Node normal = (Node)xpath.evaluate(expr,document,XPathConstants.NODE);
                 Element packed = document.createElement("artifact");
 
-                packed.setAttribute("classifier","osgi.bundle");
+                packed.setAttribute("classifier", isPlugin ? "osgi.bundle" : "org.eclipse.update.feature");
                 packed.setAttribute("id",artifactBits[0]);
                 packed.setAttribute("version",artifactBits[1]);
 
@@ -290,6 +300,138 @@ public class ChecksumMojo extends AbstractEclipseSigningMojo
         {
             getLog().error(e);
         }
+    }
+    
+    /**
+     * Creates the extra property and mapping rules for the pack.gz
+     */
+    protected void insertPropertyAndMappingRules()
+    {
+    	try
+    	{
+	        DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+	        Document document = builder.parse(new File(artifactsXml));
+	        
+	        boolean documentWasModified = false;
+	
+	        {
+	        //<property name='publishPackFilesAsSiblings' value='true'/>
+	        String selectPublishPackfilesAsSiblings = "/repository/properties/property[@name='publishPackFilesAsSiblings']";
+	        XPath xpath = XPathFactory.newInstance().newXPath();
+	        Element propertyEl = (Element)xpath.evaluate(selectPublishPackfilesAsSiblings,document,XPathConstants.NODE);
+
+	        String selectProperties = "/repository/properties";
+	        xpath = XPathFactory.newInstance().newXPath();
+	        Element propertiesEl = (Element)xpath.evaluate(selectProperties,document,XPathConstants.NODE);
+	        if (propertiesEl == null)
+	        {
+	        	throw new IllegalArgumentException("The artifacts.xml document must have a /repository/properties element.");
+	        }
+
+	        if (propertyEl == null)
+    		{
+		        Element publishPackElem = document.createElement("property");
+		        publishPackElem.setAttribute("name", "publishPackFilesAsSiblings");
+		        publishPackElem.setAttribute("value", "true");
+		        propertiesEl.appendChild(publishPackElem);
+		        documentWasModified = true;
+    		}
+	        else
+	        {
+	        	if (!"true".equals(propertyEl.getAttribute("value")))
+	        	{
+	        		propertyEl.setAttribute("value", "true");
+	        		documentWasModified = true;
+	        	}
+	        }
+	        
+	        //update the number of properties attribute
+	        if (documentWasModified)
+	        {
+	        	int size = propertiesEl.getElementsByTagName("property").getLength();
+	        	propertiesEl.setAttribute("size", String.valueOf(size));
+	        }
+	        }//end of properties processor
+	        
+	        {
+	        //<rule filter='(&amp; (classifier=osgi.bundle) (format=packed))'
+	        //      output='${repoUrl}/plugins/${id}_${version}.jar.pack.gz'/>
+	        //<rule filter='(&amp; (classifier=org.eclipse.update.feature) (format=packed))'
+	        //      output='${repoUrl}/features/${id}_${version}.jar.pack.gz'/>
+	        String selectMappings = "/repository/mappings";
+	        XPath xpath = XPathFactory.newInstance().newXPath();
+	        Element mappingsEl = (Element)xpath.evaluate(selectMappings,document,XPathConstants.NODE);
+	        if (mappingsEl == null)
+	        {
+	        	throw new IllegalArgumentException("The artifacts.xml document must have a /repository/mappings element.");
+	        }
+	        
+	        //Just iterate over the rules elements and look at the value of the attributes.
+	        boolean foundPackedBundleFilter = false;
+	        boolean foundPackedFeatureFilter = false;
+	        NodeList nl = mappingsEl.getChildNodes();
+	        for (int i = 0; i < nl.getLength(); i++)
+	        {
+	        	Node c = nl.item(i);
+	        	if (c.getNodeType() == Node.ELEMENT_NODE)
+	        	{
+	        		Element rule = (Element)c;
+	        		String filter = rule.getAttribute("filter");
+	        		if (filter.indexOf("format=packed") != -1)
+	        		{
+	        			if (filter.indexOf("classifier=osgi.bundle") != -1)
+	        			{
+	        				foundPackedBundleFilter = true;
+	        			}
+	        			else if (filter.indexOf("classifier=org.eclipse.update.feature") != -1)
+	        			{
+	        				foundPackedFeatureFilter = true;
+	        			}
+	        			if (foundPackedBundleFilter && foundPackedFeatureFilter)
+	        			{
+	        				break;
+	        			}
+	        		}
+	        	}
+	        }
+	        if (!foundPackedBundleFilter)
+	        {
+		        Element ruleElem = document.createElement("rule");
+		        ruleElem.setAttribute("filter", "(& (classifier=osgi.bundle) (format=packed))");
+		        ruleElem.setAttribute("output", "${repoUrl}/plugins/${id}_${version}.jar.pack.gz");
+		        mappingsEl.appendChild(ruleElem);
+		        documentWasModified = true;
+	        }
+	        if (!foundPackedFeatureFilter)
+	        {
+		        Element ruleElem = document.createElement("rule");
+		        ruleElem.setAttribute("filter", "(& (classifier=org.eclipse.update.feature) (format=packed))");
+		        ruleElem.setAttribute("output", "${repoUrl}/features/${id}_${version}.jar.pack.gz");
+		        mappingsEl.appendChild(ruleElem);
+		        documentWasModified = true;
+	        }
+	        //update the number of properties attribute
+	        if (!foundPackedFeatureFilter || !foundPackedBundleFilter)
+	        {
+	        	int size = mappingsEl.getElementsByTagName("rule").getLength();
+	        	mappingsEl.setAttribute("size", String.valueOf(size));
+	        }
+	        
+	        }//end of rules processor
+	        
+	        if (documentWasModified)
+	        {
+	            Transformer txformer = TransformerFactory.newInstance().newTransformer();
+	            DOMSource src = new DOMSource(document);
+	            StreamResult res = new StreamResult(artifactsXml);
+	            txformer.transform(src,res);
+	        }
+        }
+        catch (Exception e)
+        {
+            getLog().error(e);
+        }
+        
     }
 
     private String convert(byte[] bytes)

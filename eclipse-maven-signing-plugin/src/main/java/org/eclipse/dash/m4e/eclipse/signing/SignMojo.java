@@ -174,7 +174,15 @@ public class SignMojo extends AbstractEclipseSigningMojo
         }
         catch (Exception e)
         {
-            getLog().error(e);
+        	getLog().error(e);
+        	if (e instanceof MojoExecutionException)
+        	{
+        		throw (MojoExecutionException)e;
+        	}
+        	if (e instanceof MojoFailureException)
+        	{
+        		throw (MojoFailureException)e;
+        	}
         }
     }
 
@@ -185,6 +193,12 @@ public class SignMojo extends AbstractEclipseSigningMojo
         signerOutputDirectory = signerInputDirectory + File.separator + "signed";
 
         FileUtils.mkdir(signerInputDirectory);
+        
+        if (!FileUtils.fileExists(signerInputDirectory))
+        {
+            throw new MojoFailureException("Unable to create the directory " + signerInputDirectory);
+        }
+
         FileUtils.mkdir(signerOutputDirectory);
         FileUtils.copyFile(new File(inputFile),new File(signerInputDirectory + File.separator + FileUtils.filename(inputFile)));
 
