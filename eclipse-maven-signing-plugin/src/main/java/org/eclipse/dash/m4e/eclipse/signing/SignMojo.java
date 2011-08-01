@@ -266,14 +266,14 @@ public class SignMojo extends AbstractEclipseSigningMojo
         if (count == maxZipChecks)
         {
             getLog().error("signer process never signaled completion");
-            // cleanup(exec, signerInputDirectory);
+            FileUtils.deleteDirectory(signerInputDirectory);
             return;
         }
         else
         {
             getLog().info("copying signed artifact to :" + outputFile);
             FileUtils.copyFile(new File(signerOutputDirectory + File.separator + FileUtils.filename(inputFile)),new File(outputFile));
-            // cleanup(exec, signerInputDirectory);
+            FileUtils.deleteDirectory(signerInputDirectory);
             return;
         }
 
