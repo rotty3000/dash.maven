@@ -237,6 +237,8 @@ public class SignMojo extends AbstractEclipseSigningMojo
                 ++count;
                 Thread.sleep(zipCheckInterval);
 
+                
+                @SuppressWarnings("unchecked")
                 List<String> signedDirList = FileUtils.getFileNames(new File(signerOutputDirectory),"**",null,true);
 
                 info("signed dir output: " + signedDirList.size());
@@ -317,6 +319,7 @@ public class SignMojo extends AbstractEclipseSigningMojo
                 ++count;
                 Thread.sleep(zipCheckInterval);
 
+                @SuppressWarnings("unchecked")
                 List<String> signedDirList = exec.getFileList(signerOutputDirectory);
 
                 info("signed dir output:");

@@ -27,8 +27,6 @@ import java.util.UUID;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.project.MavenProject;
-import org.apache.maven.wagon.CommandExecutor;
-import org.apache.maven.wagon.Wagon;
 import org.codehaus.plexus.archiver.zip.ZipArchiver;
 import org.codehaus.plexus.util.DirectoryScanner;
 import org.codehaus.plexus.util.FileUtils;
@@ -166,6 +164,7 @@ public class PackMojo extends AbstractEclipseSigningMojo
      * More doc here: https://bugs.eclipse.org/bugs/show_bug.cgi?id=178723
      * </p>
      */
+    @SuppressWarnings("deprecation")
     private void setupPackProperties(File targetRepo, File packPropertiesSource) throws MojoExecutionException
     {
         // pack.excludes=com.ibm.icu.base_3.6.1.v20070417.jar,com.ibm.icu_3.6.1.v20070417.jar,com.jcraft.jsch_0.1.31.jar
@@ -295,11 +294,6 @@ public class PackMojo extends AbstractEclipseSigningMojo
         }
     }
 
-    private void cleanup()
-    {
-
-    }
-
     private void packLocally() throws Exception
     {
 
@@ -328,7 +322,7 @@ public class PackMojo extends AbstractEclipseSigningMojo
             pack.addArguments(generatePackExecuteString(stagingDirectory + "/" + __PACK_JAR,inputFile,packedOutputDirectory));
 
             info("executing pack200, output at end of execution : " + pack);
-            int returnCode = CommandLineUtils.executeCommandLine(pack,out,err);
+            CommandLineUtils.executeCommandLine(pack,out,err);
 
             String packErrput = IOUtil.toString(new StringReader(err.getOutput()));
             String packOutput = IOUtil.toString(new StringReader(out.getOutput()));

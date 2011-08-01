@@ -124,11 +124,12 @@ public class ChecksumMojo extends AbstractEclipseSigningMojo
             
             insertPropertyAndMappingRules();
 
-            List files = FileUtils.getFileNames(new File(unzipDir),"**/*.jar","",true);
+            @SuppressWarnings("unchecked")
+            List<String> files = FileUtils.getFileNames(new File(unzipDir),"**/*.jar","",true);
 
-            for (Iterator i = files.iterator(); i.hasNext();)
+            for (Iterator<String> i = files.iterator(); i.hasNext();)
             {
-                String filename = (String)i.next();
+                String filename = i.next();
                 info("Processing: " + filename);
                 if (filename.endsWith("artifacts.jar"))
                 {
