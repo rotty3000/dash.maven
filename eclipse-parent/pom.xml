@@ -1,208 +1,326 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project>
-   <modelVersion>4.0.0</modelVersion>
-   <groupId>org.eclipse</groupId>
-   <artifactId>eclipse-parent</artifactId>
-   <packaging>pom</packaging>
-   <name>Eclipse Parent POM</name>
-   <version>1.0.1.0-SNAPSHOT</version>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.eclipse</groupId>
+  <artifactId>eclipse-parent</artifactId>
+  <packaging>pom</packaging>
+  <name>Eclipse :: Parent POM</name>
+  <version>1.0.1.0-SNAPSHOT</version>
+  <description>
+    This is the parent for all eclipse.org applications.  This contains general 
+    configuration and setup information that all projects can inherit.
+  </description>
 
-   <description>
-	   This is the parent for all eclipse.org applications.  This contains
-	   general configuration and setup information that all projects can
-	   inherit.
-    </description>
+  <!-- default settings for CI system, projects should override for their 
+    specific build project or group -->
+  <ciManagement>
+    <system>hudson</system>
+    <url>https://hudson.eclipse.org/hudson</url>
+  </ciManagement>
 
-   <ciManagement>
-      <system>hudson</system>
-      <url>https://hudson.eclipse.org/hudson</url>
-   </ciManagement>
+  <!-- default license for eclipse projects, dual licensed projects should 
+    override with both of their licenses -->
+  <licenses>
+    <license>
+      <name>Eclipse Public License</name>
+      <url>http://www.eclipse.org/legal/epl-v10.html</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
 
-   <licenses>
-      <license>
-         <name>Eclipse Public License</name>
-         <url>http://www.eclipse.org/legal/epl-v10.html</url>
-         <distribution>repo</distribution>
-      </license>
-   </licenses>
+  <organization>
+    <name>Eclipse Foundation</name>
+    <url>http://www.eclipse.org/</url>
+  </organization>
 
-   <organization>
-      <name>Eclipse Foundation</name>
-      <url>http://www.eclipse.org/</url>
-   </organization>
+  <!-- default settings for bugzilla, project should override for their specific 
+    project -->
+  <issueManagement>
+    <system>Bugzilla</system>
+    <url>https://bugs.eclipse.org/bugs</url>
+  </issueManagement>
 
-   <issueManagement>
-      <system>Bugzilla</system>
-      <url>https://bugs.eclipse.org/bugs</url>
-   </issueManagement>
+  <!-- scm information used for releasing the org.eclipse:eclipse-parent 
+    artifact projects should override this setting -->
+  <scm>
+    <connection>scm:git:http://git.eclipse.org/gitroot/dash/org.eclipse.dash.maven.git</connection>
+    <developerConnection>scm:git:ssh://git.eclipse.org/gitroot/dash/org.eclipse.dash.maven.git</developerConnection>
+    <url>http://git.eclipse.org/c/dash/org.eclipse.dash.maven.git</url>
+  </scm>
 
-   <profiles>
-      <profile>
-         <id>eclipse-indigo-dist</id>
-         <distributionManagement>
-            <repository>
-               <uniqueVersion>false</uniqueVersion>
-               <id>eclipse-milestone-indigo</id>
-               <name>Eclipse Indigo Milestone Repository</name>
-               <url>http://maven.eclipse.org/nexus/content/repositories/milestone-indigo/</url>
-               <layout>default</layout>
-            </repository>
-            <snapshotRepository>
-               <uniqueVersion>true</uniqueVersion>
-               <id>eclipse-nightly-indigo</id>
-               <name>Eclipse Indigo Nightly Snapshots</name>
-               <url>http://maven.eclipse.org/nexus/content/repositories/nightly-indigo/</url>
-               <layout>default</layout>
-            </snapshotRepository>
-         </distributionManagement>
-      </profile>
-      <profile>
-         <id>eclipse-juno-dist</id>
-         <distributionManagement>
-            <repository>
-               <uniqueVersion>false</uniqueVersion>
-               <id>eclipse-milestone-juno</id>
-               <name>Eclipse Juno Milestone Repository</name>
-               <url>http://maven.eclipse.org/nexus/content/repositories/milestone-juno/</url>
-               <layout>default</layout>
-            </repository>
-            <snapshotRepository>
-               <uniqueVersion>true</uniqueVersion>
-               <id>eclipse-nightly-juno</id>
-               <name>Eclipse Juno Nightly Snapshots</name>
-               <url>http://maven.eclipse.org/nexus/content/repositories/nightly-juno/</url>
-               <layout>default</layout>
-            </snapshotRepository>
-         </distributionManagement>
-      </profile>
-      <profile>
-         <id>analysis</id>
-         <build>
-            <plugins>
-               <plugin>
-                  <groupId>org.codehaus.mojo</groupId>
-                  <artifactId>findbugs-maven-plugin</artifactId>
-                  <version>2.3.2</version>
-                  <executions>
-                     <execution>
-                        <id>hudson-findbugs</id>
-                        <goals>
-                           <goal>findbugs</goal>
-                        </goals>
-                        <configuration>
-                           <findbugsXmlOutput>true</findbugsXmlOutput>
-                           <failOnError>false</failOnError>
-                        </configuration>
-                     </execution>
-                  </executions>
-               </plugin>
-               <plugin>
-                  <groupId>org.apache.maven.plugins</groupId>
-                  <artifactId>maven-pmd-plugin</artifactId>
-                  <version>2.5</version>
-                  <executions>
-                     <execution>
-                        <id>cpd-analysis</id>
-                        <phase>verify</phase>
-                        <goals>
-                           <goal>cpd</goal>
-                        </goals>
-                     </execution>
-                  </executions>
-               </plugin>
-            </plugins>
-         </build>
-      </profile>
-      <profile>
-         <id>checkstyle</id>
-         <activation>
-            <activeByDefault>false</activeByDefault>
-         </activation>
-         <build>
-            <plugins>
-               <plugin>
-                  <groupId>org.apache.maven.plugins</groupId>
-                  <artifactId>maven-checkstyle-plugin</artifactId>
-                  <version>2.6</version>
-                  <executions>
-                     <execution>
-                        <phase>verify</phase>
-                        <goals>
-                           <goal>checkstyle</goal>
-                        </goals>
-                        <configuration>
-                           <failOnErrors>false</failOnErrors>
-                           <consoleOutput>true</consoleOutput>
-                        </configuration>
-                     </execution>
-                  </executions>
-               </plugin>
-            </plugins>
-         </build>
-      </profile>
-      <profile>
-         <id>repo-public</id>
-         <activation>
-            <activeByDefault>false</activeByDefault>
-         </activation>
-         <repositories>
-            <repository>
-               <id>eclipse-public</id>
-               <name>Eclipse Public Repositories</name>
-               <url>http://maven.eclipse.org/public</url>
-               <snapshots>
-                  <enabled>true</enabled>
-               </snapshots>
-            </repository>
-         </repositories>
-      </profile>
-      <profile>
-         <id>milestone</id>
-         <activation>
-            <activeByDefault>false</activeByDefault>
-         </activation>
-         <repositories>
-            <repository>
-               <id>milestone</id>
-               <name>Milestone releases</name>
-               <url>http://maven.eclipse.org/milestone</url>
-               <snapshots>
-                  <enabled>false</enabled>
-               </snapshots>
-            </repository>
-         </repositories>
-      </profile>
-      <profile>
-         <id>integration</id>
-         <activation>
-            <activeByDefault>false</activeByDefault>
-         </activation>
-         <repositories>
-            <repository>
-               <id>integration</id>
-               <name>Integration releases</name>
-               <url>http://maven.eclipse.org/integration</url>
-               <snapshots>
-                  <enabled>true</enabled>
-               </snapshots>
-            </repository>
-         </repositories>
-      </profile>
-      <profile>
-         <id>nightly</id>
-         <activation>
-            <activeByDefault>false</activeByDefault>
-         </activation>
-         <repositories>
-            <repository>
-               <id>nightly</id>
-               <name>Nightly releases</name>
-               <url>http://maven.eclipse.org/nightly</url>
-               <snapshots>
-                  <enabled>true</enabled>
-               </snapshots>
-            </repository>
-         </repositories>
-      </profile>
-   </profiles>
+  <!-- used for releasing the org.eclipse:eclipse-parent artifact projects 
+    should override this setting -->
+  <distributionManagement>
+    <repository>
+      <uniqueVersion>false</uniqueVersion>
+      <id>eclipse-milestone-indigo</id>
+      <name>Eclipse Indigo Milestone Repository</name>
+      <url>http://maven.eclipse.org/nexus/content/repositories/milestone-indigo/</url>
+      <layout>default</layout>
+    </repository>
+    <snapshotRepository>
+      <uniqueVersion>true</uniqueVersion>
+      <id>eclipse-nightly-indigo</id>
+      <name>Eclipse Indigo Nightly Snapshots</name>
+      <url>http://maven.eclipse.org/nexus/content/repositories/nightly-indigo/</url>
+      <layout>default</layout>
+    </snapshotRepository>
+  </distributionManagement>
+
+  <build>
+    <plugins>
+      <!-- default configuration for the maven release plugin, usable for 
+        projects releasing in a typical maven fashion, deployment with tycho will 
+        use a different strategy -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-release-plugin</artifactId>
+        <configuration>
+          <useReleaseProfile>false</useReleaseProfile>
+          <goals>deploy</goals>
+          <arguments>-Peclipse-release-maven</arguments>
+          <preparationGoals>clean install</preparationGoals>
+          <mavenExecutorId>forked-path</mavenExecutorId>
+          <autoVersionSubmodules>true</autoVersionSubmodules>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+  <!-- profiles allow for dynamic behavior with a maven build, as such heavy 
+    usage is discouraged as it makes builds harder to be reproducible that being 
+    said these settings offer a good example for how project builds can be wired 
+    to particular repositories and tooling it is not recommended to _rely_ on 
+    these profiles being present for eternity, instead take the profiles that 
+    interest you and wire them directly into your project -->
+  <profiles>
+    <profile>
+      <id>eclipse-indigo-dist</id>
+      <distributionManagement>
+        <repository>
+          <uniqueVersion>false</uniqueVersion>
+          <id>eclipse-milestone-indigo</id>
+          <name>Eclipse Indigo Milestone Repository</name>
+          <url>http://maven.eclipse.org/nexus/content/repositories/milestone-indigo/</url>
+          <layout>default</layout>
+        </repository>
+        <snapshotRepository>
+          <uniqueVersion>true</uniqueVersion>
+          <id>eclipse-nightly-indigo</id>
+          <name>Eclipse Indigo Nightly Snapshots</name>
+          <url>http://maven.eclipse.org/nexus/content/repositories/nightly-indigo/</url>
+          <layout>default</layout>
+        </snapshotRepository>
+      </distributionManagement>
+    </profile>
+    <profile>
+      <id>eclipse-juno-dist</id>
+      <distributionManagement>
+        <repository>
+          <uniqueVersion>false</uniqueVersion>
+          <id>eclipse-milestone-juno</id>
+          <name>Eclipse Juno Milestone Repository</name>
+          <url>http://maven.eclipse.org/nexus/content/repositories/milestone-juno/</url>
+          <layout>default</layout>
+        </repository>
+        <snapshotRepository>
+          <uniqueVersion>true</uniqueVersion>
+          <id>eclipse-nightly-juno</id>
+          <name>Eclipse Juno Nightly Snapshots</name>
+          <url>http://maven.eclipse.org/nexus/content/repositories/nightly-juno/</url>
+          <layout>default</layout>
+        </snapshotRepository>
+      </distributionManagement>
+    </profile>
+    <profile>
+      <id>analysis</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>findbugs-maven-plugin</artifactId>
+            <version>2.3.2</version>
+            <executions>
+              <execution>
+                <id>hudson-findbugs</id>
+                <goals>
+                  <goal>findbugs</goal>
+                </goals>
+                <configuration>
+                  <findbugsXmlOutput>true</findbugsXmlOutput>
+                  <failOnError>false</failOnError>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-pmd-plugin</artifactId>
+            <version>2.5</version>
+            <executions>
+              <execution>
+                <id>cpd-analysis</id>
+                <phase>verify</phase>
+                <goals>
+                  <goal>cpd</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
+      <id>checkstyle</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-checkstyle-plugin</artifactId>
+            <version>2.6</version>
+            <executions>
+              <execution>
+                <phase>verify</phase>
+                <goals>
+                  <goal>checkstyle</goal>
+                </goals>
+                <configuration>
+                  <failOnErrors>false</failOnErrors>
+                  <consoleOutput>true</consoleOutput>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
+      <id>repo-public</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+      </activation>
+      <repositories>
+        <repository>
+          <id>eclipse-public</id>
+          <name>Eclipse Public Repositories</name>
+          <url>http://maven.eclipse.org/public</url>
+          <snapshots>
+            <enabled>true</enabled>
+          </snapshots>
+        </repository>
+      </repositories>
+    </profile>
+    <profile>
+      <id>milestone</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+      </activation>
+      <repositories>
+        <repository>
+          <id>milestone</id>
+          <name>Milestone releases</name>
+          <url>http://maven.eclipse.org/milestone</url>
+          <snapshots>
+            <enabled>false</enabled>
+          </snapshots>
+        </repository>
+      </repositories>
+    </profile>
+    <profile>
+      <id>integration</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+      </activation>
+      <repositories>
+        <repository>
+          <id>integration</id>
+          <name>Integration releases</name>
+          <url>http://maven.eclipse.org/integration</url>
+          <snapshots>
+            <enabled>true</enabled>
+          </snapshots>
+        </repository>
+      </repositories>
+    </profile>
+    <profile>
+      <id>nightly</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+      </activation>
+      <repositories>
+        <repository>
+          <id>nightly</id>
+          <name>Nightly releases</name>
+          <url>http://maven.eclipse.org/nightly</url>
+          <snapshots>
+            <enabled>true</enabled>
+          </snapshots>
+        </repository>
+      </repositories>
+    </profile>
+    <!-- the default profile for releasing maven artifacts within eclipse, 
+      projects releasing with a tycho release process will use a separate profile 
+      to be determined at a later time. -->
+    <profile>
+      <id>eclipse-release-maven</id>
+      <build>
+        <plugins>
+          <plugin>
+            <inherited>true</inherited>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-deploy-plugin</artifactId>
+            <configuration>
+              <updateReleaseInfo>true</updateReleaseInfo>
+            </configuration>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-source-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>attach-sources</id>
+                <goals>
+                  <goal>jar</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>attach-javadocs</id>
+                <goals>
+                  <goal>jar</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-gpg-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>sign-artifacts</id>
+                <phase>verify</phase>
+                <goals>
+                  <goal>sign</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <!-- 
+    profile used for releasing with tycho
+    -->
+    <profile>
+      <id>eclipse-release-tycho</id>
+    </profile>
+  </profiles>
 </project>
