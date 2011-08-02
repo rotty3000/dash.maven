@@ -5,32 +5,36 @@
     <groupId>org.eclipse</groupId>
     <artifactId>eclipse-parent</artifactId>
     <version>1.0.1.0-SNAPSHOT</version>
-    <!-- relativePath>../eclipse-parent/pom.xml</relativePath -->
   </parent>
 
   <groupId>org.eclipse.dash.maven</groupId>
-  <artifactId>eclipse-maven-signing-plugin</artifactId>
+  <artifactId>eclipse-signing-maven-plugin</artifactId>
   <version>1.0.2.0-SNAPSHOT</version>
-  <name>Dash Tools :: Maven :: Eclipse Signing Maven Plugin</name>
+  <name>Eclipse :: Dash :: Eclipse Signing Maven Plugin</name>
   <description>Plugin for signing code on the eclipse build servers.</description>
   <packaging>maven-plugin</packaging>
+  <issueManagement>
+    <system>Bugzilla</system>
+    <url>https://bugs.eclipse.org/bugs/enter_bug.cgi?product=Dash</url>
+  </issueManagement>
   <scm>
-    <connection>scm:git:git://git.eclipse.org/gitroot/dash/org.eclipse.dash.maven.git</connection>
+    <connection>scm:git:http://git.eclipse.org/gitroot/dash/org.eclipse.dash.maven.git</connection>
     <developerConnection>scm:git:ssh://git.eclipse.org/gitroot/dash/org.eclipse.dash.maven.git</developerConnection>
+    <url>http://git.eclipse.org/c/dash/org.eclipse.dash.maven.git</url>
   </scm>
   <distributionManagement>
-    <!--repository>
+    <repository>
       <uniqueVersion>false</uniqueVersion>
       <id>eclipse-milestone-indigo</id>
       <name>Eclipse Indigo Milestone Repository</name>
       <url>http://maven.eclipse.org/nexus/content/repositories/milestone-indigo/</url>
       <layout>default</layout>
-    </repository-->
+    </repository>
     <snapshotRepository>
       <uniqueVersion>true</uniqueVersion>
       <id>eclipse-nightly-indigo</id>
       <name>Eclipse Indigo Nightly Snapshots</name>
-      <url>http://maven.eclipse.org/nexus/content/groups/nightly/</url>
+      <url>http://maven.eclipse.org/nexus/content/repositories/nightly-indigo/</url>
       <layout>default</layout>
     </snapshotRepository>
   </distributionManagement>
