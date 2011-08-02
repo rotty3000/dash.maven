@@ -11,15 +11,19 @@
     configuration and setup information that all projects can inherit.
   </description>
 
-  <!-- default settings for CI system, projects should override for their 
-    specific build project or group -->
+  <!-- 
+  default settings for CI system, projects should override for their 
+  specific build project or group 
+  -->
   <ciManagement>
     <system>hudson</system>
     <url>https://hudson.eclipse.org/hudson</url>
   </ciManagement>
 
-  <!-- default license for eclipse projects, dual licensed projects should 
-    override with both of their licenses -->
+  <!-- 
+  default license for eclipse projects, dual licensed projects should 
+  override with both of their licenses 
+  -->
   <licenses>
     <license>
       <name>Eclipse Public License</name>
@@ -33,23 +37,29 @@
     <url>http://www.eclipse.org/</url>
   </organization>
 
-  <!-- default settings for bugzilla, project should override for their specific 
-    project -->
+  <!-- 
+  default settings for bugzilla, project should override for their specific 
+  project 
+  -->
   <issueManagement>
     <system>Bugzilla</system>
     <url>https://bugs.eclipse.org/bugs</url>
   </issueManagement>
 
-  <!-- scm information used for releasing the org.eclipse:eclipse-parent 
-    artifact projects should override this setting -->
+  <!-- 
+  scm information used for releasing the org.eclipse:eclipse-parent 
+  artifact projects should override this setting 
+  -->
   <scm>
     <connection>scm:git:http://git.eclipse.org/gitroot/dash/org.eclipse.dash.maven.git</connection>
     <developerConnection>scm:git:ssh://git.eclipse.org/gitroot/dash/org.eclipse.dash.maven.git</developerConnection>
     <url>http://git.eclipse.org/c/dash/org.eclipse.dash.maven.git</url>
   </scm>
 
-  <!-- used for releasing the org.eclipse:eclipse-parent artifact projects 
-    should override this setting -->
+  <!-- 
+  used for releasing the org.eclipse:eclipse-parent artifact projects 
+  should override this setting 
+  -->
   <distributionManagement>
     <repository>
       <uniqueVersion>false</uniqueVersion>
@@ -69,9 +79,11 @@
 
   <build>
     <plugins>
-      <!-- default configuration for the maven release plugin, usable for 
-        projects releasing in a typical maven fashion, deployment with tycho will 
-        use a different strategy -->
+      <!-- 
+      default configuration for the maven release plugin, usable for 
+      projects releasing in a typical maven fashion, deployment with tycho will 
+      use a different strategy 
+      -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-release-plugin</artifactId>
@@ -87,12 +99,15 @@
     </plugins>
   </build>
 
-  <!-- profiles allow for dynamic behavior with a maven build, as such heavy 
-    usage is discouraged as it makes builds harder to be reproducible that being 
-    said these settings offer a good example for how project builds can be wired 
-    to particular repositories and tooling it is not recommended to _rely_ on 
-    these profiles being present for eternity, instead take the profiles that 
-    interest you and wire them directly into your project -->
+  <!-- 
+  profiles allow for dynamic behavior with a maven build, as such heavy 
+  usage is discouraged as it makes builds harder to be reproducible that being 
+  said these settings offer a good example for how project builds can be wired 
+  to particular repositories and tooling 
+    
+  it is not recommended to _rely_ on these profiles being present for eternity, 
+  instead take the profiles that interest you and wire them directly into your project 
+  -->
   <profiles>
     <profile>
       <id>eclipse-indigo-dist</id>
@@ -261,9 +276,11 @@
         </repository>
       </repositories>
     </profile>
-    <!-- the default profile for releasing maven artifacts within eclipse, 
-      projects releasing with a tycho release process will use a separate profile 
-      to be determined at a later time. -->
+    <!-- 
+    the default profile for releasing maven artifacts within eclipse, 
+    projects releasing with a tycho release process will use a separate profile 
+    to be determined at a later time. 
+    -->
     <profile>
       <id>eclipse-release-maven</id>
       <build>
