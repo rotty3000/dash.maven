@@ -1,12 +1,13 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0">
   <modelVersion>4.0.0</modelVersion>
- 
   <groupId>org.eclipse.dash.maven</groupId>
   <artifactId>eclipse-maven-parent</artifactId>
   <version>DO_NOT_RELEASE</version>
   <packaging>pom</packaging>
+  <name>Eclipse :: Maven Parent Pom :: DO_NOT_RELEASE</name>
+  <description>handy for building everything in same reactor</description>
   <modules>
      <module>eclipse-parent</module>
-     <module>eclipse-maven-signing-plugin</module>
+     <module>eclipse-signing-maven-plugin</module>
   </modules>
 </project>
