@@ -222,7 +222,7 @@
         <repository>
           <id>eclipse-public</id>
           <name>Eclipse Public Repositories</name>
-          <url>http://maven.eclipse.org/public</url>
+          <url>http://maven.eclipse.org/nexus/content/groups/public</url>
           <snapshots>
             <enabled>true</enabled>
           </snapshots>
@@ -238,7 +238,7 @@
         <repository>
           <id>milestone</id>
           <name>Milestone releases</name>
-          <url>http://maven.eclipse.org/milestone</url>
+          <url>http://maven.eclipse.org/nexus/content/groups/milestone</url>
           <snapshots>
             <enabled>false</enabled>
           </snapshots>
@@ -254,7 +254,7 @@
         <repository>
           <id>integration</id>
           <name>Integration releases</name>
-          <url>http://maven.eclipse.org/integration</url>
+          <url>http://maven.eclipse.org/nexus/content/groups/integration</url>
           <snapshots>
             <enabled>true</enabled>
           </snapshots>
@@ -270,7 +270,7 @@
         <repository>
           <id>nightly</id>
           <name>Nightly releases</name>
-          <url>http://maven.eclipse.org/nightly</url>
+          <url>http://maven.eclipse.org/nexus/content/groups/nightly</url>
           <snapshots>
             <enabled>true</enabled>
           </snapshots>
