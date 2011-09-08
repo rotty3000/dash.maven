@@ -408,7 +408,10 @@ public class ChecksumMojo extends AbstractEclipseSigningMojo
 		        Element ruleElem = document.createElement("rule");
 		        ruleElem.setAttribute("filter", "(& (classifier=org.eclipse.update.feature) (format=packed))");
 		        ruleElem.setAttribute("output", "${repoUrl}/features/${id}_${version}.jar.pack.gz");
-		        mappingsEl.appendChild(ruleElem);
+		        // Bug 356931 format=packed must be first rule in mappings
+		        Node firstRule = mappingsEl.getFirstChild();
+		        mappingsEl.insertBefore(ruleElem, firstRule);
+
 		        documentWasModified = true;
 	        }
 	        //update the number of properties attribute
