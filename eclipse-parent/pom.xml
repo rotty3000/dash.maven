@@ -5,7 +5,7 @@
   <artifactId>eclipse-parent</artifactId>
   <packaging>pom</packaging>
   <name>Eclipse :: Parent POM</name>
-  <version>3</version>
+  <version>4-SNAPSHOT</version>
   <description>
     This is the parent for all eclipse.org applications.  This contains general 
     configuration and setup information that all projects can inherit.
