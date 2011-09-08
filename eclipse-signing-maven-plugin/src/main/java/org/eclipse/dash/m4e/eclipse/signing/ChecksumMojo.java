@@ -400,7 +400,9 @@ public class ChecksumMojo extends AbstractEclipseSigningMojo
 		        Element ruleElem = document.createElement("rule");
 		        ruleElem.setAttribute("filter", "(& (classifier=osgi.bundle) (format=packed))");
 		        ruleElem.setAttribute("output", "${repoUrl}/plugins/${id}_${version}.jar.pack.gz");
-		        mappingsEl.appendChild(ruleElem);
+		        // Bug 356931 format=packed must be first rule in mappings
+		        Node firstRule = mappingsEl.getFirstChild();
+		        mappingsEl.insertBefore(ruleElem, firstRule);
 		        documentWasModified = true;
 	        }
 	        if (!foundPackedFeatureFilter)
