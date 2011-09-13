@@ -19,6 +19,7 @@ import java.io.InputStream;
 import java.security.MessageDigest;
 import java.util.Iterator;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -173,12 +174,18 @@ public class ChecksumMojo extends AbstractEclipseSigningMojo
             
             String pluginFile = FileUtils.basename(plugin,".jar");
 
-            int lastUnderscore = pluginFile.lastIndexOf('_');
+            Pattern p = Pattern.compile("_\\d");
+        	
+        	String[] bits = p.split(pluginFile);
+        	
+        	//System.out.println(file.substring(0, bits[0].length()) + " / " + file.substring(bits[0].length() + 1 , file.length()));
+        	            
+            int versionSplitUnderscore = bits[0].length();
             
             String[] artifactBits = new String[2];
 
-            artifactBits[0] = pluginFile.substring(0,lastUnderscore);
-            artifactBits[1] = pluginFile.substring(lastUnderscore + 1, pluginFile.length());
+            artifactBits[0] = pluginFile.substring(0,versionSplitUnderscore);
+            artifactBits[1] = pluginFile.substring(versionSplitUnderscore + 1, pluginFile.length());
             
             getLog().info(" Artifact: " + artifactBits[0] + " / Version: " + artifactBits[1] + " / isPlugin: " + isPlugin );
 
@@ -457,4 +464,19 @@ public class ChecksumMojo extends AbstractEclipseSigningMojo
         getLog().info("[FIX] " + log);
     }
 
+    public static void main(String[] args ) throws Exception
+    {
+    	String file = "org.eclipse.equinox.server.core_1.1.1.R37x_v20110907-7K7TFBYDzbeA3ypK_98cDL15A4A";
+    	Pattern p = Pattern.compile("_\\d");
+    	
+    	String[] bits = p.split(file);
+    	
+    	System.out.println(file.substring(0, bits[0].length()) + " / " + file.substring(bits[0].length() + 1 , file.length()));
+    	
+    	
+    	
+    	
+    }
+    
+    
 }
