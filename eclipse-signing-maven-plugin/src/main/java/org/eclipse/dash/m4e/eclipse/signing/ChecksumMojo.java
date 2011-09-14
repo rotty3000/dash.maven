@@ -174,7 +174,7 @@ public class ChecksumMojo extends AbstractEclipseSigningMojo
             
             String pluginFile = FileUtils.basename(plugin,".jar");
 
-            Pattern p = Pattern.compile("_\\d");
+            Pattern p = Pattern.compile("_\\d*\\.");
         	
         	String[] bits = p.split(pluginFile);
         	
